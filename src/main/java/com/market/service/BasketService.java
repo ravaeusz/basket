@@ -25,8 +25,11 @@ public class BasketService {
         this.platziStoreClient = platziStoreClient;
     }
 
-    public Basket createBasket(BasketRequest request) {
+    public List<Basket> getBasket(){
+        return basketRepository.findAll();
+    }
 
+    public Basket createBasket(BasketRequest request) {
         List<Product> products = request.products().stream()
                 .map(p -> {
                     ProductsResponse productsResponse = platziStoreClient.getProductById(p.getId());
@@ -50,7 +53,8 @@ public class BasketService {
         return basketRepository.findById(id)
                 .map(basket ->{
                     basket.setPayment(payment);
-                    basket.setState(CLOSE);
+                    basket.setState(State.CLOSE);
+                    basket.setTotal(basket.getTotalCalc());
                     return basketRepository.save(basket);
                 });
     }
@@ -58,7 +62,7 @@ public class BasketService {
     public Optional<Basket>  getBasket(String id){
         return basketRepository.findById(id)
                 .map(basket -> {
-                    basket.setTotal(basket.getTotalCalc());
+                    basket.getTotalCalc();
                     return basket;
                 });
     }
