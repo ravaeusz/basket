@@ -1,6 +1,7 @@
 package com.market.controller;
 
 import com.market.entity.Basket;
+import com.market.entity.Product;
 import com.market.enums.MethodPayment;
 import com.market.service.BasketRequest;
 import com.market.service.BasketService;
@@ -41,13 +42,20 @@ public class BasketController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteBasket(@PathVariable String id){
         basketService.deleteBasket(id);
-        return ResponseEntity.ok().body("Basket id: "+id+" excluido com sucesso!");
+        return ResponseEntity.ok()
+                .body("Basket id: "+id+" excluido com sucesso!");
     }
 
-    @PostMapping("/checkout")
-    public ResponseEntity<Optional<Basket>> checkout(@RequestBody String id, @RequestBody MethodPayment payment){
+    @PostMapping("/checkout/{id}")
+    public ResponseEntity<Optional<Basket>> checkout(@PathVariable String id, @RequestBody MethodPayment payment){
         return ResponseEntity.ok()
                 .body(basketService.checkout(id,payment));
+    }
+
+    @PostMapping("/add-product/{id}")
+    public ResponseEntity<Basket> addProduct (@PathVariable String id, @RequestBody BasketRequest product){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(basketService.addProcuct(id,product));
     }
 
 }

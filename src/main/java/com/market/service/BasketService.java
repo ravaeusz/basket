@@ -71,4 +71,33 @@ public class BasketService {
     public void deleteBasket(String id){
         basketRepository.deleteById(id);
     }
+
+    public Basket addProcuct(String id, BasketRequest request){
+        Optional<Basket> basket = Optional.ofNullable(basketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Basket not found")));;
+
+        List<Product> products = basket.get().getProducts();
+
+        List<Product> newProducts = request.products().stream().map( p -> {
+                ProductsResponse productsResponse = platziStoreClient.getProductById(p.getId());
+                return new Product(
+                productsResponse.id(),
+                productsResponse.title(),
+                productsResponse.price(),
+                p.getQuantity()
+                );
+        }).toList();
+
+        products.addAll(newProducts);
+
+        basket.get().setTotal(basket.get().getTotalCalc());
+
+        return basketRepository.save(new Basket(
+                basket.get().getId(),
+                products,
+                basket.get().getPayment(),
+                basket.get().getState(),
+                basket.get().getTotal()));
+
+    }
 }

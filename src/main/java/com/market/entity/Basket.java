@@ -9,13 +9,14 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Document("basket")
+@Document(collection = "market-basket")
 public class Basket {
 
     @Id
@@ -23,16 +24,13 @@ public class Basket {
     private List<Product> products;
     private MethodPayment payment;
     private State state;
-    private double total;
+    private BigDecimal total;
 
-    public double getTotalCalc() {
-        if (products == null || products.isEmpty()) {
-            return total = 0.0;
-        }
-
-        return total = products.stream()
-                .mapToDouble(Product::getPrice)
-                .sum();
+    public BigDecimal getTotalCalc() {
+        return products.stream()
+                .map(p -> BigDecimal.valueOf(p.getPrice())
+                        .multiply(BigDecimal.valueOf(p.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 
