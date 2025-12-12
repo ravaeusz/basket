@@ -33,7 +33,7 @@ public class BasketController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Basket> createBasket(BasketRequest request){
+    public ResponseEntity<Basket> createBasket(@RequestBody BasketRequest request){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(basketService.createBasket(request));
     }

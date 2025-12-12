@@ -44,6 +44,7 @@ public class BasketService {
         Basket basket = new Basket();
         basket.setProducts(products);
         basket.setState(State.OPEN);
+        basket.setTotal(basket.getTotalCalc());
 
         return basketRepository.save(basket);
 

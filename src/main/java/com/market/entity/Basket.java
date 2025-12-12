@@ -19,7 +19,7 @@ import java.util.List;
 public class Basket {
 
     @Id
-    private Long id;
+    private String id;
     private List<Product> products;
     private MethodPayment payment;
     private State state;
