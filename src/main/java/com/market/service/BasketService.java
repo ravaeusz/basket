@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.market.enums.State.CLOSE;
 
 @Service
 public class BasketService {
@@ -100,4 +99,15 @@ public class BasketService {
                 basket.get().getTotal()));
 
     }
+
+    public Basket deleteProcuct(String id, Integer productId) {
+        Basket basket = (basketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Basket not found")));
+
+        basket.getProducts().removeIf(
+                product -> product.getId().equals(productId)
+        );
+        return basketRepository.save(basket);
+    }
+
 }

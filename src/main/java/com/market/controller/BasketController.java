@@ -1,7 +1,6 @@
 package com.market.controller;
 
 import com.market.entity.Basket;
-import com.market.entity.Product;
 import com.market.enums.MethodPayment;
 import com.market.service.BasketRequest;
 import com.market.service.BasketService;
@@ -57,5 +56,12 @@ public class BasketController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(basketService.addProcuct(id,product));
     }
+
+    @DeleteMapping("/remove-product/{id}")
+    public ResponseEntity<Basket> deleteProduct(@PathVariable String id, @RequestBody Integer productId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(basketService.deleteProcuct(id,productId));
+    }
+
 
 }
